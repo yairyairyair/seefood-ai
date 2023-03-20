@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const FormData = require('form-data');
+const cors = require('micro-cors')();
 
 const PREDICT_ENDPOINT = process.env.PREDICT_ENDPOINT;
 if (!PREDICT_ENDPOINT) {
@@ -7,7 +8,7 @@ if (!PREDICT_ENDPOINT) {
 	process.exit(1);
 }
 
-module.exports = async (req, res) => {
+module.exports = cors(async (req, res) => {
 	const imageUrl = decodeURI(req.url).slice(1);
 	if (imageUrl === '') {
 		return 'go to /<image url> to predict'
@@ -33,4 +34,4 @@ module.exports = async (req, res) => {
 	// if ai more than 50% sure that its hotdog then its hotdog
 	const isHotDog = firstPrediction.label == 'hotdog' && firstPrediction.probability > 0.5
 	return isHotDog ? 'hotdog' : 'not hotdog';
-};
+});
