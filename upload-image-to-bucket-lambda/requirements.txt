@@ -2,3 +2,4 @@ python-dotenv
 minio
 fastapi
 python-multipart
+uvicorn[standard]
