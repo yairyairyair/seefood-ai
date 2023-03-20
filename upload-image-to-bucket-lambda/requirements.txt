@@ -1,0 +1,4 @@
+python-dotenv
+minio
+fastapi
+python-multipart
