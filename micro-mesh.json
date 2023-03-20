@@ -1,0 +1,59 @@
+{
+    "apiVersion": "v1beta",
+    "version": "v1",
+    "name": "seefood-ai",
+    "services": [
+        {
+            "name": "frontend",
+            "image": ""
+        },
+        {
+            "name": "upload-image-to-bucket-lambda",
+            "image": ""
+        },
+        {
+            "name": "images-bucket",
+            "image": ""
+        },
+        {
+            "name": "is-hot-dog-lambda",
+            "image": ""
+        },
+        {
+            "name": "flask-resnet-ai",
+            "image": "btphan95/resnet-kub"
+        }
+    ],
+    "links": [
+        {
+            "name": "reactflow__edge-flask-resnet-is-hot-dog-lambda",
+            "source": "flask-resnet-ai",
+            "target": "is-hot-dog-lambda",
+            "port": 80
+        },
+        {
+            "name": "reactflow__edge-images-bucket-upload-image-to-bucket-lambda",
+            "source": "images-bucket",
+            "target": "upload-image-to-bucket-lambda",
+            "port": 80
+        },
+        {
+            "name": "reactflow__edge-images-bucket-is-hot-dog-lambda",
+            "source": "images-bucket",
+            "target": "is-hot-dog-lambda",
+            "port": 80
+        },
+        {
+            "name": "reactflow__edge-is-hot-dog-lambda-frontend",
+            "source": "is-hot-dog-lambda",
+            "target": "frontend",
+            "port": 80
+        },
+        {
+            "name": "reactflow__edge-upload-image-to-bucket-lambda-frontend",
+            "source": "upload-image-to-bucket-lambda",
+            "target": "frontend",
+            "port": 80
+        }
+    ]
+}
