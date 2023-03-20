@@ -1,0 +1,14 @@
+{
+  "name": "is-hot-dog-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "is-hot-dog-lambda.js",
+  "scripts": {
+    "start": "micro"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "micro": "^10.0.1",
+    "node-fetch": "^2.6.9"
+  }
+}
