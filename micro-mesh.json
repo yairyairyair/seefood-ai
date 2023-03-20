@@ -6,23 +6,143 @@
     "services": [
         {
             "name": "frontend",
-            "image": ""
-        },
-        {
-            "name": "upload-image-to-bucket-lambda",
-            "image": ""
+            "image": "dockerdocker12345/seefood-ai-frontend:latest",
+            "traits": {
+                "ports": {
+                    "ports": [
+                        {
+                            "servicePort": 80,
+                            "targetPort": 80
+                        }
+                    ]
+                },
+                "domain": {
+                    "prefferedSubDomain": "app"
+                }
+            }
         },
         {
             "name": "images-bucket",
-            "image": ""
+            "image": "dockerdocker12345/images-bucket:latest",
+            "traits": {
+                "ports": {
+                    "ports": [
+                        {
+                            "servicePort": 9000,
+                            "targetPort": 9000
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "images-static-site",
+            "image": "boxrick/s3www:latest",
+            "traits": {
+                "ports": {
+                    "ports": [
+                        {
+                            "servicePort": 8080,
+                            "targetPort": 80
+                        }
+                    ]
+                },
+                "environment": {
+                    "environment": [
+                        {
+                            "name": "endpoint",
+                            "value": "http://images-bucket:9000"
+                        },
+                        {
+                            "name": "accessKey",
+                            "value": "minioadmin"
+                        },
+                        {
+                            "name": "secretKey",
+                            "value": "minioadmin"
+                        },
+                        {
+                            "name": "bucket",
+                            "value": "images-bucket"
+                        },
+                        {
+                            "name": "address",
+                            "value": "0.0.0.0:8080"
+                        }
+                    ]
+                },
+                "domain": {
+                    "prefferedSubDomain": "images"
+                }
+            }
+        },
+        {
+            "name": "upload-image-to-bucket-lambda",
+            "image": "dockerdocker12345/upload-image-to-bucket-lambda:latest",
+            "traits": {
+                "ports": {
+                    "ports": [
+                        {
+                            "servicePort": 80,
+                            "targetPort": 80
+                        }
+                    ]
+                },
+                "environment": {
+                    "environment": [
+                        {
+                            "name": "BUCKET_ENDPOINT",
+                            "value": "images-bucket:9000"
+                        },
+                        {
+                            "name": "BUCKET_NAME",
+                            "value": "images-bucket"
+                        }
+                    ]
+                },
+                "domain": {
+                    "prefferedSubDomain": "upload"
+                }
+            }
         },
         {
             "name": "is-hot-dog-lambda",
-            "image": ""
+            "image": "dockerdocker12345/is-hot-dog-lambda:latest",
+            "traits": {
+                "ports": {
+                    "ports": [
+                        {
+                            "servicePort": 3000,
+                            "targetPort": 80
+                        }
+                    ]
+                },
+                "environment": {
+                    "environment": [
+                        {
+                            "name": "PREDICT_ENDPOINT",
+                            "value": "http://flask-resnet-ai/predict"
+                        }
+                    ]
+                },
+                "domain": {
+                    "prefferedSubDomain": "ai"
+                }
+            }
         },
         {
             "name": "flask-resnet-ai",
-            "image": "btphan95/resnet-kub"
+            "image": "btphan95/resnet-kub:latest",
+            "traits": {
+                "ports": {
+                    "ports": [
+                        {
+                            "servicePort": 8080,
+                            "targetPort": 80
+                        }
+                    ]
+                }
+            }
         }
     ],
     "links": [
