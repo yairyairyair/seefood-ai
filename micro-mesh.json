@@ -1,4 +1,5 @@
 {
+    "$schema": "https://backend.micromesh.dev/schemas/micro-mesh-schema.json",
     "apiVersion": "v1beta",
     "version": "v1",
     "name": "seefood-ai",
