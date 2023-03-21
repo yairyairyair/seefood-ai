@@ -1,180 +1,222 @@
 {
-    "$schema": "https://backend.micromesh.dev/schemas/micro-mesh-schema.json",
-    "apiVersion": "v1beta",
-    "version": "v1",
-    "name": "seefood-ai",
-    "services": [
-        {
-            "name": "frontend",
-            "image": "dockerdocker12345/seefood-ai-frontend:latest",
-            "traits": {
-                "ports": {
-                    "ports": [
-                        {
-                            "servicePort": 80,
-                            "targetPort": 80
-                        }
-                    ]
-                },
-                "domain": {
-                    "prefferedSubDomain": "app"
-                }
-            }
-        },
-        {
-            "name": "images-bucket",
-            "image": "dockerdocker12345/images-bucket:latest",
-            "traits": {
-                "ports": {
-                    "ports": [
-                        {
-                            "servicePort": 9000,
-                            "targetPort": 9000
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "name": "images-static-site",
-            "image": "boxrick/s3www:latest",
-            "traits": {
-                "ports": {
-                    "ports": [
-                        {
-                            "servicePort": 8080,
-                            "targetPort": 80
-                        }
-                    ]
-                },
-                "environment": {
-                    "environment": [
-                        {
-                            "name": "endpoint",
-                            "value": "http://images-bucket:9000"
-                        },
-                        {
-                            "name": "accessKey",
-                            "value": "minioadmin"
-                        },
-                        {
-                            "name": "secretKey",
-                            "value": "minioadmin"
-                        },
-                        {
-                            "name": "bucket",
-                            "value": "images-bucket"
-                        },
-                        {
-                            "name": "address",
-                            "value": "0.0.0.0:8080"
-                        }
-                    ]
-                },
-                "domain": {
-                    "prefferedSubDomain": "images"
-                }
-            }
-        },
-        {
-            "name": "upload-image-to-bucket-lambda",
-            "image": "dockerdocker12345/upload-image-to-bucket-lambda:latest",
-            "traits": {
-                "ports": {
-                    "ports": [
-                        {
-                            "servicePort": 80,
-                            "targetPort": 80
-                        }
-                    ]
-                },
-                "environment": {
-                    "environment": [
-                        {
-                            "name": "BUCKET_ENDPOINT",
-                            "value": "images-bucket:9000"
-                        },
-                        {
-                            "name": "BUCKET_NAME",
-                            "value": "images-bucket"
-                        }
-                    ]
-                },
-                "domain": {
-                    "prefferedSubDomain": "upload"
-                }
-            }
-        },
-        {
-            "name": "is-hot-dog-lambda",
-            "image": "dockerdocker12345/is-hot-dog-lambda:latest",
-            "traits": {
-                "ports": {
-                    "ports": [
-                        {
-                            "servicePort": 3000,
-                            "targetPort": 80
-                        }
-                    ]
-                },
-                "environment": {
-                    "environment": [
-                        {
-                            "name": "PREDICT_ENDPOINT",
-                            "value": "http://flask-resnet-ai/predict"
-                        }
-                    ]
-                },
-                "domain": {
-                    "prefferedSubDomain": "ai"
-                }
-            }
-        },
-        {
-            "name": "flask-resnet-ai",
-            "image": "btphan95/resnet-kub:latest",
-            "traits": {
-                "ports": {
-                    "ports": [
-                        {
-                            "servicePort": 8080,
-                            "targetPort": 80
-                        }
-                    ]
-                }
-            }
+  "$schema": "https://backend.micromesh.dev/schemas/micro-mesh-schema.json",
+  "apiVersion": "v1beta",
+  "version": "v1",
+  "name": "seefood-ai",
+  "services": [
+    {
+      "name": "frontend",
+      "metadata": {
+        "position": {
+          "x": -671.9999999999995,
+          "y": 1.9999999999999716
         }
-    ],
-    "links": [
-        {
-            "name": "reactflow__edge-flask-resnet-is-hot-dog-lambda",
-            "source": "flask-resnet-ai",
-            "target": "is-hot-dog-lambda",
-            "port": 80
+      },
+      "image": "dockerdocker12345/seefood-ai-frontend:latest",
+      "traits": {
+        "ports": {
+          "ports": [
+            {
+              "servicePort": 80,
+              "targetPort": 80
+            }
+          ]
         },
-        {
-            "name": "reactflow__edge-images-bucket-upload-image-to-bucket-lambda",
-            "source": "images-bucket",
-            "target": "upload-image-to-bucket-lambda",
-            "port": 80
-        },
-        {
-            "name": "reactflow__edge-images-bucket-is-hot-dog-lambda",
-            "source": "images-bucket",
-            "target": "is-hot-dog-lambda",
-            "port": 80
-        },
-        {
-            "name": "reactflow__edge-is-hot-dog-lambda-frontend",
-            "source": "is-hot-dog-lambda",
-            "target": "frontend",
-            "port": 80
-        },
-        {
-            "name": "reactflow__edge-upload-image-to-bucket-lambda-frontend",
-            "source": "upload-image-to-bucket-lambda",
-            "target": "frontend",
-            "port": 80
+        "domain": {
+          "prefferedSubDomain": "app"
         }
-    ]
+      }
+    },
+    {
+      "name": "images-bucket",
+      "metadata": {
+        "position": {
+          "x": 790,
+          "y": 71.99999999999994
+        }
+      },
+      "image": "dockerdocker12345/images-bucket:latest",
+      "traits": {
+        "ports": {
+          "ports": [
+            {
+              "servicePort": 9000,
+              "targetPort": 9000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "images-static-site",
+      "metadata": {
+        "position": {
+          "x": 320,
+          "y": -57.99999999999994
+        }
+      },
+      "image": "boxrick/s3www:latest",
+      "traits": {
+        "ports": {
+          "ports": [
+            {
+              "servicePort": 8080,
+              "targetPort": 80
+            }
+          ]
+        },
+        "environment": {
+          "environment": [
+            {
+              "name": "endpoint",
+              "value": "http://images-bucket:9000"
+            },
+            {
+              "name": "accessKey",
+              "value": "minioadmin"
+            },
+            {
+              "name": "secretKey",
+              "value": "minioadmin"
+            },
+            {
+              "name": "bucket",
+              "value": "images-bucket"
+            },
+            {
+              "name": "address",
+              "value": "0.0.0.0:8080"
+            }
+          ]
+        },
+        "domain": {
+          "prefferedSubDomain": "images"
+        }
+      }
+    },
+    {
+      "name": "upload-image-to-bucket-lambda",
+      "metadata": {
+        "position": {
+          "x": -175.9137661563925,
+          "y": 162.94047014424876
+        }
+      },
+      "image": "dockerdocker12345/upload-image-to-bucket-lambda:latest",
+      "traits": {
+        "ports": {
+          "ports": [
+            {
+              "servicePort": 80,
+              "targetPort": 80
+            }
+          ]
+        },
+        "environment": {
+          "environment": [
+            {
+              "name": "BUCKET_ENDPOINT",
+              "value": "images-bucket:9000"
+            },
+            {
+              "name": "BUCKET_NAME",
+              "value": "images-bucket"
+            }
+          ]
+        },
+        "domain": {
+          "prefferedSubDomain": "upload"
+        }
+      }
+    },
+    {
+      "name": "is-hot-dog-lambda",
+      "metadata": {
+        "position": {
+          "x": -167.8453349713559,
+          "y": -145.5868696528419
+        }
+      },
+      "image": "dockerdocker12345/is-hot-dog-lambda:latest",
+      "traits": {
+        "ports": {
+          "ports": [
+            {
+              "servicePort": 3000,
+              "targetPort": 80
+            }
+          ]
+        },
+        "environment": {
+          "environment": [
+            {
+              "name": "PREDICT_ENDPOINT",
+              "value": "http://flask-resnet-ai/predict"
+            }
+          ]
+        },
+        "domain": {
+          "prefferedSubDomain": "ai"
+        }
+      }
+    },
+    {
+      "name": "flask-resnet-ai",
+      "metadata": {
+        "position": {
+          "x": 515.6855834688345,
+          "y": -360.22055297674154
+        }
+      },
+      "image": "btphan95/resnet-kub:latest",
+      "traits": {
+        "ports": {
+          "ports": [
+            {
+              "servicePort": 8080,
+              "targetPort": 80
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "links": [
+    {
+      "name": "reactflow__edge-flask-resnet-is-hot-dog-lambda",
+      "source": "flask-resnet-ai",
+      "target": "is-hot-dog-lambda",
+      "port": 80
+    },
+    {
+      "name": "reactflow__edge-images-bucket-upload-image-to-bucket-lambda",
+      "source": "images-bucket",
+      "target": "upload-image-to-bucket-lambda",
+      "port": 80
+    },
+    {
+      "name": "reactflow__edge-is-hot-dog-lambda-frontend",
+      "source": "is-hot-dog-lambda",
+      "target": "frontend",
+      "port": 80
+    },
+    {
+      "name": "reactflow__edge-upload-image-to-bucket-lambda-frontend",
+      "source": "upload-image-to-bucket-lambda",
+      "target": "frontend",
+      "port": 80
+    },
+    {
+      "name": "reactflow__edge-images-static-site-is-hot-dog-lambda",
+      "source": "images-static-site",
+      "target": "is-hot-dog-lambda",
+      "port": 0
+    },
+    {
+      "name": "reactflow__edge-images-bucket-images-static-site",
+      "source": "images-bucket",
+      "target": "images-static-site",
+      "port": 0
+    }
+  ]
 }
